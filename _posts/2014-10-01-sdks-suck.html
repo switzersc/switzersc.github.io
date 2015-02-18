@@ -1,0 +1,64 @@
+---
+title: SDKs suck, so why do they exist?
+date: 2014-10-01 01:37 UTC
+tags: code, ruby, APIs
+---
+
+<p>
+	This past weekend, I was innocently attending <a href="http://www.restfest.org/" target="_blank">RESTFest</a> in Greenville, SC, along with some of the biggest API geeks and fanatics I’ve ever met.<a href="#footnote1" name="footnote1anc"><sup>1</sup></a> Things were going smoothly — people were arguing about The One HyperMedia Type To Rule Them All, some devs from Apigee did demos of their new <a href="http://www.zettajs.org/" target="_blank">ZettaJS</a> with LEDs and arduinos, and “state machines” kept gaining momentum as the conference’s actual topic (um, move aside HTTP RFCs) — when someone innocuously mentioned in their talk a truth that I had yet to admit to myself: SDKs suck.
+</p>
+
+<p>
+	Now, I have to admit<a href="#footnote2" name="footnote2anc"><sup>2</sup></a> that I’ve used (and some of my current apps still use) SDKs pretty frequently. I wish I could say that I enjoyed using them, that they were the gin and tonic to my Monday afternoon, or, at the very least, that they made my life a pinch easier as a developer — but I can’t.<a href="#footnote3" name="footnote3anc"><sup>3</sup></a>  Some of them, whether they’re “marketed” (ugh) as gems or SDKs or POSes, are ridiculously patchy and return unhelpful messages (’yes, I will give you a “1” to let you know your HTTP request was successful and a “0” if it fails’ - that makes perfect sense, right, Mogreet?), and with others it might take some deep spelunking into the cavernous depths of API consumption to find the weak spots — but they’re always there. 
+</p>
+<p>
+	Take Dropbox for example: I love Dropbox, their API and documentation and their extremely responsive dev support team. But if you check out my app that uses its API the most extensively, you’ll see the odd HTTP request here and there that I used in place of the standard DropboxClient class from their SDK. I’ve had to make direct HTTP requests for a couple of reasons, mostly being that the relevant SDK method doesn’t support some options that you can pass alternatively as query string parameters in an HTTP request. This begs the question, why not include the capability to attach any relevant parameter to the SDK method as optional keys in a hash? Why not make your SDK be able to handle any request your API can handle?
+</p>
+
+<p>
+	But those questions, while reasonable,<a href="#footnote4" name="footnote4anc"><sup>4</sup></a> are ultimately beside the point. Even if you use an SDK and even if it has good documentation, at some point you’re going to have to go to the core API docs to check out the endpoints, payload possibilities, and responses. Furthermore, the documentation for the SDK versus the normal HTTP documentation is not always consistent. One thing I find hilarious is that the <a href="https://www.dropbox.com/developers/core/docs#thumbnails" target="_blank">Dropbox API documentation</a> gives 5 options (xs, s, m, l, xl) for creating a thumbnail from its <code>https://api-content.dropbox.com/1/thumbnails/auto/path</code> endpoint, but the <a href="http://dropbox.github.io/dropbox-sdk-ruby/api-docs/v1.6.4/DropboxClient.html" target="_blank">Ruby SDK</a> gives different options (small, medium, large, s, m, l, xl). What's more, none of the dimensions match at all (e.g. the SDK's "l" has different dimensions than the regular API's "l"). I had to use the Ruby SDK for this one just so I could play around with more size options. Surely it would make more sense not even if APIs and SDKs were consistent, but if APIs just had good HTTP documentation with examples so that developers could deal directly with the requests and responses instead of having to fool around with wrapper classes. It would save time, confusion, and frustration.
+</p>
+
+<p>
+	When I started coming to this realization, I felt betrayed. I trusted these pernicious little code packages called SDKs and the API developers who wrote them. Surely, I thought, they must have my best interests at heart. Why would they make these things and encourage me to use them, trojan horses that they are? Maybe some companies think they haven’t “made it” until they’ve created an SDK for at least one platform. Maybe some people try to make the barrier for entry to their API as low as possible — with the attitude that many developers don’t want to go outside the comfort zone of their particular language or platform so won’t use an API unless they can interact with it through a pretty Ruby class.<a href="#footnote5" name="footnote5anc"><sup>5</sup></a> If that’s actually the case, it’s sad. We should expect more from developers — if expecting that they be able to competently make, receive, and interpret HTTP requests and responses is indeed "more." Maybe the reason there aren’t better APIs in general is because so many developers who make them would prefer SDKs themselves, or because they think “we don’t need to put too much effort into making this simple and well-documented because we’ll just wrap it in an SDK later”. In that case, we should expect more from API builders — especially in terms of documentation. 
+</p>
+<p>
+	I do realize that an argument for SDKs could be that it helps the developer through API version changes, so that they don't have to change all their HTTP requests to meet the new API requirements, but in all likelihood enough about your API is probably changing between versions that the consumer-developer is going to have to do some maintenance anyway. I vote let the consumer take care of writing their own wrapper classes for your API to maintain if they so choose. That way, they're not fooled into trusting that you're keeping your SDK up to date (or even consistent from the beginning) with your HTTP API, and you don't have the added guilt keeping you awake at night when you choose not to maintain those extra libraries.
+</p>
+
+<footer>
+  <div class="container">
+    <br>
+    <div id="footnote1">
+    <a href="#footnote1anc" name="footnote1sym">1</a> I.e. the salt of the earth, y’all. P.s. that event is incredible.
+    </div>
+  </div>
+  <div class="container">
+  	<br>
+  	<div id="footnote2">
+    <a href="#footnote2anc" name="footnote2sym">2</a>
+  	And you can find evidence on the internet, ahem.
+  	</div>
+  </div>
+  <div class="container">
+  	<br>
+  	<div id="footnote3">
+    <a href="#footnote3anc" name="footnote3sym">3</a>
+  	I also wish I could say why it took me until an innocuous talk on hypermedia at RESTFest to make me realize this, but I can’t do that either.
+  	</div>
+  </div>
+  <div class="container">
+  	<br>
+  	<div id="footnote4">
+    <a href="#footnote4anc" name="footnote4sym">4</a>
+  	And in my humble opinion, fucking obvious.
+  	</div>
+  </div>
+  <div class="container">
+  	<br>
+  	<div id="footnote5">
+    <a href="#footnote5anc" name="footnote5sym">5</a>
+  	Or ugly-ass Objective-C spaghetti script. (No language bias here!)
+  	</div>
+  </div>
+</footer>

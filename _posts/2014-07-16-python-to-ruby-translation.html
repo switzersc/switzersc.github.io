@@ -1,0 +1,154 @@
+---
+title: python to ruby translation no. 1
+date: 2014-07-16 15:30 UTC
+tags: python, ruby, programming, translation, dropbox
+---
+
+<p>
+	Yesterday, I was browsing through the Dropbox docs, developer forum and blog, trying to find a method or endpoint that returns multiple file results at once (not just the file path or name, but the actual file). I wasn't able to find what I was looking for, but in the process, I came across <a href="https://www.dropbox.com/developers/blog/69/efficiently-enumerating-dropbox-with-delta" target="_blank">one of their dev blog posts</a> about <code>delta()</code>. It contained a lot of information, some of it potentially useful to me, but at also had examples in Python.
+</p>
+
+<p>
+	I had seen Python before, but I'd never taken a good look. Now here I was, faced with some pieces of code that might yield some nuggets of gold -- if I wanted to decipher the example.<a href="#footnote1" name="footnote1anc"><sup>1</sup></a> Honestly, I was excited by the prospect. This was a chance to learn some Python, maybe learn more about Ruby in the process, and do some fun translation work. 
+</p>
+
+<p>
+	I started with this chunk of Python and started my Ruby interpretation:
+</p>
+
+<pre class="brush: python">
+def list_files(client, files=None, cursor=None):
+    if files is None:
+        files = {}
+
+    has_more = True
+
+    while has_more:
+        result = client.delta(cursor)
+        cursor = result['cursor']
+        has_more = result['has_more']
+
+        for lowercase_path, metadata in result['entries']:
+
+            if metadata is not None:
+                files[lowercase_path] = metadata
+
+            else:
+                # no metadata indicates a deletion
+
+                # remove if present
+                files.pop(lowercase_path, None)
+
+                # in case this was a directory, delete everything under it
+                for other in files.keys():
+                    if other.startswith(lowercase_path + '/'):
+                        del files[other]
+
+    return files, cursor
+</pre>
+
+<p>The most obvious thing I noticed was the use of white space to close each code block. So my first step was to go in and add 'end' as necessary. Then I started to identify things that looked <strong>familiar</strong> to me:</p>
+
+<ul>
+	<li>Accepting arguments when defining a method and assigning defaults to them in the first line</li>
+	<li>Setting up an empty hash with just <code>files = {}</code> and subesquently getting values from the hash with the square brackets syntax, e.g. <code>result['cursor']</code></li>
+	<li>A <code>while</code> loop and <code>for</code> loops</li>
+	<li><code>if</code> / <code>else</code> statements </li>
+	<li>Simple variable assigment: <code>has_more = True</code></li>
+	<li>Boolean value of <code>True</code> just a capitalized version of Ruby's <code>true</code></li>
+</ul>
+
+<p>Then were the things that were slightly different but I could understand by analogy:</p>
+
+<ul>
+	<li><code>None</code>: I immediately assumed this was the rough equivalent to Ruby's <code>nil</code>, but did a quick Google search to confirm. Yes, both <code>None</code> and <code>nil</code> are singleton objects, and appear to be used in similar ways.<a href="#footnote2" name="footnote2anc"><sup>2</sup></a></li>
+	
+	<li><code>is None</code> apparent equivalent of <code>nil?</code> and <code>is not None</code> equivalent of <code>!nil?</code></li>
+	
+	<li>Beginning a block with <code>:</code> corresponds with Ruby's <code>do</code></li>
+
+	<li><code>.startswith()</code> matches Ruby's <code>.start_with?()</code></li>
+
+</ul>
+
+<p>That pretty much left only two things that had yet to be translated: <code>files.pop(lowercase_path, None)</code> and <code>del files[other]</code>. <code>pop</code> looked dangerously similar to Ruby's Array instance method <code>#pop</code>, but since this was being called on a hash I suspected it wasn't quite the same. After some investigation (i.e. a Google search for "python hash pop"), I found out a couple new things -- first, <code>files</code> wasn't exactly a hash as I know it, but this thing called a <strong>dictionary</strong>. <a href="https://docs.python.org/2/library/stdtypes.html#dict.pop" target="_blank"><code>dict.pop(key[, default])</code></a> is function you can call on a dictionary (like a Ruby hash) to remove a key that exists (and matches the first argument) and return its value; and if the key doesn't exist, return the default supplied as the second argument. If the key doesn't exist and you don't provide a default value as the second argument, then a KeyError is raised.</p>
+
+<p>This function is similar to Ruby's <a href="http://www.ruby-doc.org/core-2.1.2/Hash.html#method-i-delete" target="_blank"> <code>Hash#delete(key)</code></a>, but <code>delete(key)</code> assumes more than <code>dict.pop(key[, default])</code> does -- if the key doesn't exist, it automatically returns <code>nil</code> or the already given default value of the hash,<a href="#footnote4" name="footnote4anc"><sup>4</sup></a> instead of raising an error or exception. So here, <code>files.pop(lowercase_path, None)</code> was the equivalent of <code>files.delete(lowercase_path)</code>.</p>
+
+<p>That just left <code>del files[other]</code>, which apparently is also the rough equivalent of Ruby's <code>files.delete[other]</code>, with one noticeable difference being that Python's <a href="https://docs.python.org/2/reference/simple_stmts.html#grammar-token-del_stmt">del statement</a> doesn't return anything, whereas Ruby's method will return the value of <code>other</code> or the hash's default.<a href="#footnote5" name="footnote5anc"><sup>5</sup></a> That was pretty interesting to notice -- using <a href="http://repl.it/languages/Python">this awesome in-browser interpreter</a> to try out this Python business,<a href="#footnote6" name="footnote6anc"><sup>6</sup></a> I noticed that some functions in Python just don't return a value back to you, whereas Ruby methods always do.<a href="#footnote7" name="footnote7anc"><sup>7</sup></a></p>
+
+<p>Here's my Ruby version of the above. It's pretty literal; I didn't break it out into smaller methods or objects at all, and I didn't try to pay too much attention to idioms because I don't know anything about Python idioms yet.</p>
+
+<pre class="brush: ruby">
+
+def list_files(client, files=nil, cursor=nil)
+  if files.nil?
+    files = {}
+  end
+
+  has_more = true
+
+  while has_more do
+    result = client.delta(cursor)
+    cursor = result['cursor']
+    has_more = result['has_more']
+
+    for lowercase_path, metadata in result['entries'] do
+
+      if metadata  # literally, if !metadata.nil?
+        files[lowercase_path] = metadata
+
+      else
+      # no metadata indicates a deletion
+
+      # remove if present
+        files.delete(lowercase_path)
+
+        # in case this was a directory, delete everything under it
+        for other in files.keys() do
+          if other.start_with?(lowercase_path + '/')
+            files.delete(other)
+          end
+        end
+      end
+    end
+  end
+  return files, cursor
+end
+
+</pre>
+
+
+<footer>
+	<div class="container">
+		<br>
+		<div id="footnote1">
+		<a href="#footnote1anc" name="footnote1sym">1</a> Yeah, yeah, I know for most people the blog post text itself would've been enough, but if my use case matched this one, I wanted to know exactly what the example was doing.
+		</div>
+
+		<div id="footnote2">
+		<a href="#footnote2anc" name="footnote2sym">2</a> The <a href="https://docs.python.org/2/library/constants.html">docs</a> and <a href="http://www.pythoncentral.io/python-null-equivalent-none/">another good source</a>.
+		</div>
+
+		<div id="footnote3">
+		<a href="#footnote3anc" name="footnote3sym">3</a> <a href="https://docs.python.org/2/library/stdtypes.html#dict.pop" target="_blank">Check out the docs here</a>
+		</div>
+
+		<div id="footnote4">
+		<a href="#footnote4anc" name="footnote4sym">4</a> In Ruby, you can predefine the default of a hash when you initialize it, by simply passing it as an argument: <a href="http://www.ruby-doc.org/core-2.1.2/Hash.html#method-c-new"><code>Hash.new(default)</code></a>. In some ways, this is super useful, but it also requires you to remember what you set as a default, which could get hairy.
+		</div>
+
+		<div id="footnote5">
+		<a href="#footnote5anc" name="footnote5sym">5</a> The answer and its comments for <a href="http://stackoverflow.com/questions/5844672/delete-an-element-from-a-dictionary">this SO post</a> are also interesting and hint at some differences between Python's dictionary and Ruby's hash that are definitely worth exploring in a future post.
+		</div>
+
+		<div id="footnote6">
+		<a href="#footnote6anc" name="footnote6sym">6</a> Just didn't have time to install Python at the time, but it's on my to-do list.
+		</div>
+
+		<div id="footnote7">
+		<a href="#footnote7anc" name="footnote7sym">7</a> This is the sort of thing that makes me want to spend the rest of the day reading more on the internet instead of working. Thanks, Python.
+		</div>
+
+	</div>
+</footer>

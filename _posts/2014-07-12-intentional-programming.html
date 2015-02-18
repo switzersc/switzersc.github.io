@@ -1,0 +1,64 @@
+---
+title: intentional programming
+date: 2014-07-12 13:21 UTC
+tags: code, ruby, programming, teaching, self-awareness
+layout: blog_layout
+---
+
+
+  <p>I have a confession to make. I never typed “rails g scaffold” until I taught a RubyOnRails course.<a href="#sdfootnote1sym" name="sdfootnote1anc"><sup>1</sup></a> I knew what scaffolding was, of course, but it had never occurred to me to use it. I didn’t generate models or controllers either. This probably has a lot to do with the project I really learned Rails from — a large, already existing app that had no place for generating full scaffolds for any resource.</p>
+
+  <p>After I introduced Rails into the classroom, I noticed code in my students’ projects that I hadn’t taught them yet: READMORE</p>
+
+  <pre class="brush: ruby">
+# PATCH/PUT /incidents/1
+  # PATCH/PUT /incidents/1.json
+  def update
+    respond_to do |format|
+      if @object.update(object_params)
+        format.html { redirect_to @object, notice: ‘Object was successfully updated.' }
+        format.json { render :show, status: :ok, location: @object }
+      else
+        format.html { render :edit }
+        format.json { render json: @object.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  </pre>
+
+  <p>Obviously, there are a few things here that would make an RoR instructor happy to see: identifying the RESTful request and route, responding with multiple formats and including a status with the json response, yielding a flash notice on successful update, etc. But when I asked my students why they wrote this code, what their thought process behind it was, the answer was:</p>
+
+  <p>“Oh, it was just the Rails scaffold.”</p>
+
+  <p>When I saw actions defined in the controller that were never actually used in the app (like edit or destroy), and I asked the same question — “Why did you write this code (especially if you never intended to use it)?” — I got the same answer.</p>
+
+  <p>After that, I talked with the class and encouraged them to put down the scaffold and write these files from scratch — it would help them understand what they were doing, and aid their memory. Scaffolding is essentially copying and pasting, and that doesn’t build understanding, and it’s much easier to remember things you fundamentally understand and have typed out yourself.<a href="#sdfootnote2sym" name="sdfootnote2anc"><sup>2</sup></a></p>
+
+  <p>We also got onto the topic of intentional programming, which goes along with ideas behind BDD. When you generate a scaffold, you’re creating a whole package of code, functionality, and tests that is now your responsibility, whether you really want it all or not. A scaffold only seems to be a good fit if you know you’re going to want full standard CRUD functionality from your controller for that resource, along with HTML views, but even then, I hesitate. For a classroom management app, for example, you may know that you’ll want full CRUD for students, but when you actually get into it, you might find that you only want to add, update, or destroy students in place on the classroom’s show page, or maybe even that you don’t want to destroy students at all but only change their state. To then achieve the functionality you want, you’re going to have to do a lot of clean up to the scaffold you created — changing routes, flash notices, deleting views, changing tests, etc.</p>
+
+  <p>A lot of this just has to do with good planning (fleshing out your user stories beforehand) and coding to meet the specifications of those user stories (BDD).<a href="#sdfootnote3sym" name="sdfootnote3anc"><sup>3</sup></a> But I think there’s a lot to be said for intentionality beyond just following good BDD or TDD practices. When you can account for every line of your program as code that you understand and put there for a reason, you a) cut back on fluff and spaghetti code that clutters your app, and b) have complete control of your application. If something goes wrong, you know why, or can at least easily find out why. If you need to change something, you don’t have to dig through a bunch of code that you don’t understand, and/or don’t need, and/or never needed to begin with.</p>
+
+  <p>To some people, this may sound like a lot of obvious observations, but it's hard to keep in mind good coding practices when you're on a deadline or just plain tired. It takes discipline. Something I’ve caught myself doing is thinking about what methods I would need in a class, going ahead and writing the method, and then when I wrote the tests and made them pass, I saw that I never actually needed that method that had occurred to me earlier. Then I’d have an extra method lying around that if I didn’t clean out then, then I’d forget what it was for and if anything was using it, making it all the harder to clean out later. That sucks, and is a waste of my time at the time of writing, as well as three months down the road during refactoring. The more I think about what I'm doing, retrospectively and in the moment, the more aware I can hopefully become and the more intentional about the code I write.</p>
+
+<footer>
+  <div class="container">
+    <br>
+    <div id="sdfootnote1">
+
+    <a href="#sdfootnote1anc" name="sdfootnote1sym">1</a> Ok, maybe I used scaffolding once or twice in the very early days of digging into Treehouse.
+
+    </div>
+
+    <div id="sdfootnote2">
+
+    <a href="#sdfootnote2anc" name="sdfootnote2sym">2</a> This is something I’ve learned from experience, but I’ve also got scientific studies to back me up here.
+
+    </div>
+
+    <div id="sdfootnote3">
+
+    <a href="#sdfootnote3anc" name="sdfootnote3sym">3</a> Particularly of the kind popularized by Dave Astels and Rspec — watch his classic talk on it <a href="https://www.youtube.com/watch?v=XOkHh8zF33o">here</a> as well as a good short on the difference between TDD and BDD <a href="https://www.youtube.com/watch?v=mT8QDNNhExg">here</a>. Rspec was the primary testing framework in my class, by the way.
+
+    </div>
+  </div>
+</footer>

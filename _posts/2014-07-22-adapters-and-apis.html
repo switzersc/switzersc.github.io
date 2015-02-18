@@ -1,0 +1,80 @@
+---
+title: adapters & APIs
+date: 2014-07-22 16:03 UTC
+---
+
+<p>
+  Last week, I was working on a new project that needed to use a MMS service provider to send bulk MMSes. A quick google search was all I needed to see that there were oodles of options, and to feel the accompanying apprehension of such a discovery. I knew that I could pick one now but in the future, with changing requirements or budget, or potentially even a partnership with a provider company, the service (and therefore API) we used could very easily, and very likely, change.
+</p>
+
+<p>
+  I needed a design solution that would be flexible and allow for simple interfacing with future unknown APIs. I had been in similar scenarios before -- for example, one product I work on has a program to read various MLS feeds and create records from very different sources and differently structured information. The solution there was to create adapters (or classes used to wrap interfaces) for the different MLS interfaces.<a href="#footnote1" name="footnote1anc"><sup>1</sup></a> This is a pretty common solution when working with vendor libraries or external APIs,<a href="#footnote2" name="footnote2anc"><sup>2</sup></a> but it's also a pattern incredibly embedded within Rails. Just consider ActiveRecord -- it has to adapt your data messages to different types of databases and return back consistent messages you can use.<a href="#footnote3" name="footnote3anc"><sup>3</sup></a>
+</p>
+
+<p>
+  So my solution for this app was to create a service called MmsHandler and an adapter class for my chosen API. The MmsHandler would determine which API adapter to use (right now based simply on an environment variable, since we'd only be using one API at a time and this would potentially differ between prod, staging, and dev environments), give it the numbers to send out to, and tell it to perform its job. The adapter class (in this case MogreetAdapter), was responsible for invoking the external API and performing its job with the given numbers.
+</p>
+
+<p>
+  Here's the code (somewhat simplified):
+</p>
+
+<pre class="brush: ruby">
+class MmsHandler
+  def self.adapter
+    ENV["MMS_SERVICE_ADAPTER"].constantize.new
+  end
+
+  def self.send_mmses(numbers)
+    adapter.perform(numbers)
+  end
+end
+</pre>
+<br>
+<pre class="brush: ruby">
+class MogreetAdapter
+  def initialize
+    @client = Mogreet::Client.new(ENV["MOGREET_CLIENT_ID"], ENV["MOGREET_SECRET"])
+  end
+
+  def perform(numbers)
+    create_list && append_list(numbers) && send_mms_to_list
+  end
+
+  def create_list
+    success?(@list_response = @client.list.create("new list"))
+  end
+
+  def append_list(numbers)
+    success? @client.list.append(list_id: @list_response.list_id, numbers: numbers)
+  end
+
+  def send_mms_to_list
+    success? @client.list.send(list_id: @list_response.list_id,
+                      campaign_id: ENV["MOGREET_MMS_CAMPAIGN_ID"],
+                      message: "Yay APIs!",
+                      content_id: 1,
+                      content_url: "http://www.ilovepies.com/pie.jpg")
+  end
+
+  def success?(response)
+    response.status == "success"
+  end
+
+end
+</pre>
+
+<footer>
+  <div class="container">
+    <br>
+    <div id="footnote1">
+    <a href="#footnote1anc" name="footnote1sym">1</a> For more on the Adapter Pattern, one of the software design patterns manifesto-ized by the Gang of Four, check out the deity of public knowledge, Wikipedia: <a href="http://en.wikipedia.org/wiki/Adapter_pattern" target="_blank">http://en.wikipedia.org/wiki/Adapter_pattern</a>
+    </div>
+    <div id="footnote2">
+    <a href="#footnote2anc" name="footnote2sym">2</a> Check out <a href="https://github.com/nslocum/design-patterns-in-ruby" target="_blank">this repo</a> for more examples.
+    </div>
+    <div id="footnote3">
+    <a href="#footnote3anc" name="footnote3sym">3</a> <a href="http://monkeyandcrow.com/blog/reading_rails_the_adapter_pattern/" target="_blank">This good post</a> goes into more detail about adapter patterns found in Rails.
+    </div>
+  </div>
+</footer>
