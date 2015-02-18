@@ -3,7 +3,7 @@ rdiscount:
   extensions:     [smart]
 highlighter:      pygments
 
-permalink:        pretty
+permalink:        /blog/:year/:month/:day/:title
 
 title:            Shelby Switzer
 tagline:          'A blog'
@@ -20,3 +20,7 @@ google_analytics:
 links:
   - name:         About
     url:          /about
+
+
+gems:
+  - jekyll-redirect-from
