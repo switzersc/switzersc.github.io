@@ -13,8 +13,8 @@ but who's got time for that? It was such a hassle just getting a blog post up an
 as a result, stopped posting.
 
 Then, a couple weeks ago, I started getting into the weeds with Jekyll, learning its ins and outs with fun libraries like 
-Bower, Grunt, and Liquid, while setting up the public API documentation for [Notion](http://notion.is).<a href="#footnote1" name="footnote1anc"><sup>1</sup></a> It was so simple 
-and actually enjoyable that I forced myself to spend some quality Shelby-time redoing my site, wine and falafel in hand. 
+Bower, Grunt, and Liquid, while setting up the public API documentation for [Notion](http://notion.is).<a href="#footnote1" name="footnote1anc"><sup>1</sup></a> 
+It was so simple and actually enjoyable that I forced myself to spend some quality Shelby-time redoing my site, wine and falafel in hand. 
 I found some [themes](https://github.com/muan/muan.github.com/releases) by a wonderful designer [Muan](http://muan.co/), 
 picked one, customized it a tiny bit, and here we are.
 
