@@ -2,6 +2,8 @@
 layout: post
 title: document early, document more
 date: 2015-03-06 12:00 MST
+redirect_from:
+    - /blog/2015/03/06/docoumentation
 ---
 
 Recently at work, we were discussing risk management for start-ups — specifically, for [our start-up](http://getnotion.com). When each of us laid out what we saw as our risks on the whiteboard, a couple things became apparent. First, there were a ton of risks. What if one of our supply-chain partners had to delay? What if a tool we decided on at an earlier stage got too expensive, or turned out not to be the right one? What about all the extra hands we were foreseeing we would need — in marketing, customer service, engineering? What if — knock on wood — one of us got hit by a bus?
