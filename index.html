@@ -4,6 +4,7 @@ layout: index
 
 <ul class="posts">
     {% for post in site.posts %}
+    {% if post.visible != false %}
     <li class="post">
         <a href="{{ post.url }}" class="post-link {% if post.cover %}has-cover{% endif %}">
             {% if post.cover %}
@@ -17,5 +18,6 @@ layout: index
             <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines }}</p>
         </a>
     </li>
+    {% endif %}
     {% endfor %}
 </ul>
