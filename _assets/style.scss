@@ -197,3 +197,14 @@ article {
   color: #999;
   display: inline-block;
 }
+
+.break-line {
+  word-wrap: break-word;
+}
+
+.nav-link {
+  margin: 0 15px;
+}
+.posts iframe {
+  padding-top: 10px;
+}

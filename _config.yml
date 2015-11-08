@@ -18,7 +18,11 @@ paginate:         5
 
 google_analytics:
 links:
-  - name:         About
+  - name:         Now
+    url:          /now
+  - name:         Speaking
+    url:          /speaking
+  - name:         Bio
     url:          /about
 
 
