@@ -2,22 +2,37 @@
 layout: index
 ---
 
+<br>
+
+<h1>Hi there! I'm Shelby.</h1>
+
+<p>
+    I'm a writer and civic technologist currently based in New York City. I have a background in software development and API design and strategy across a number of domains. Throughout my career I have focused on open data, open standards, civic/social/public tech, and civic hacktivism.
+</p>
+
+<p>
+    These days I spend most of my time on research I find interesting or impactful, contributing to open source or open standards projects, and writing about the intersection of technology, society, and public infrastructure. You can find me on Twitter as <a href="https://twitter.com/switzerly" target="_blank">@switzerly</a> or on Github as <a href="https://github.com/switzersc/" target="_blank">switzersc</a>.
+</p>
+
+<br>
+
+<h1>Current Projects</h1>
+
 <ul class="posts">
-    {% for post in site.posts %}
-    {% if post.visible != false %}
-    <li class="post">
-        <a href="{{ post.url }}" class="post-link {% if post.cover %}has-cover{% endif %}">
-            {% if post.cover %}
-            <div class="post-cover" style="background-image: url({{ post.cover }});" /></div>
-            {% endif %}
-            <div class="mark"></div>
-            <h2 class="post-title">
-                {{ post.title }}<br />
-            </h2>
-            <span class="meta">Posted <time data-time="{{ post.date }}" title="{{ post.date }}">{{ post.date | date_to_string }}</time></span>
-            <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines }}</p>
+    <li class="post post-link">
+        <div class="mark"></div>
+        <a href="https://civicunrest.com" target="_blank">
+            <h2>Civic Unrest</h2>
         </a>
+        <p>Civic Unrest is a blog focused on the intersection of technology and public infrastructure. It's a pretty broad topic, and I'm okay with that.</p>
     </li>
-    {% endif %}
-    {% endfor %}
+    <li class="post post-link">
+        <div class="mark"></div>
+        <a href="https://www.restfest.org/" target="_blank">
+            <h2>REST Fest</h2>
+        </a>
+        <p>
+            REST Fest is an international unconference series dedicated to giving people interested in REST, Hypermedia APIs, crafting web service APIs, or any related topics a chance to get together in an informal setting to share ideas, trade stories, and show examples of current work. I help organize and implement these events and expand them to new locations.
+        </p>
+    </li>
 </ul>

@@ -6,8 +6,8 @@ highlighter:      rouge
 permalink:        /blog/:year/:month/:day/:title
 
 title:            Shelby Switzer
-tagline:          'A blog'
-description:      'language junkie'
+tagline:          'Homepage of Shelby Switzer'
+description:      'Writer and Civic Technologist'
 url:              http://switzersc.github.io
 
 author:
@@ -18,8 +18,12 @@ paginate:         5
 
 google_analytics:
 links:
+  - name:         Civic Unrest
+    url:          https://civicunrest.com
   - name:         Speaking
     url:          /speaking
+  - name:         Archive
+    url:          /archive
   - name:         Bio
     url:          /about
 

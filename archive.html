@@ -1,0 +1,31 @@
+---
+layout: index
+---
+
+<br>
+<h1>Archive</h1>
+<p>
+    This page contains the archive of my blog from 2014-2015. During this time I worked as a consultant as well as an API engineer at an Internet of Things company, Notion, where I designed and built our API and developer program.
+</p>
+<p>For my latest writing, check out my civic tech blog, <a href="https://civicunrest.com" target="_blank">Civic Unrest.</a></p>
+<br>
+<br>
+<ul class="posts">
+    {% for post in site.posts %}
+    {% if post.visible != false %}
+    <li class="post">
+        <a href="{{ post.url }}" class="post-link {% if post.cover %}has-cover{% endif %}">
+            {% if post.cover %}
+            <div class="post-cover" style="background-image: url({{ post.cover }});" /></div>
+            {% endif %}
+            <div class="mark"></div>
+            <h2 class="post-title">
+                {{ post.title }}<br />
+            </h2>
+            <span class="meta">Posted <time data-time="{{ post.date }}" title="{{ post.date }}">{{ post.date | date_to_string }}</time></span>
+            <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines }}</p>
+        </a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
