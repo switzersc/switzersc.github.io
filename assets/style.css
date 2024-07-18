@@ -27,7 +27,9 @@ hr {
 
 .site-footer {
   text-align: center;
-  padding: 25px; }
+  padding: 25px; 
+  font-size: 13px;}
+
 
 .site-header {
   font-weight: bold;
@@ -77,10 +79,9 @@ hr {
 
 .posts {
   text-align: center;
-  font-size: 0; }
+  }
   .posts .post-link {
     color: inherit;
-    font-size: 13px;
     display: block;
     text-align: left;
     margin-bottom: 20px;
@@ -219,4 +220,8 @@ article {
 }
 .speaking-picture {
   width: 100%;
+}
+
+.social-icon {
+  max-width: 30px;
 }

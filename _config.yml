@@ -18,15 +18,6 @@ paginate:         5
 
 google_analytics:
 links:
-  - name:         Writing
-    url:          /writing
-  - name:         Civic Unrest
-    url:          https://civicunrest.com
-  - name:         Civic Tech
-    url:          /civic-tech
-  - name:         Speaking
-    url:          /speaking
-
 
 gems:
   - jekyll-redirect-from
